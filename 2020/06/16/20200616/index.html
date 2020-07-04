@@ -146,8 +146,6 @@
           <div class="container text-center white-text fadeInUp">
             <span class="h2" id="subtitle">
               
-                转换HTML内容为Bitmap
-              
             </span>
 
             
@@ -206,7 +204,7 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>利用COM对象将HTML内容转换为Bitmap</p>
+              <p>利用COM组件将HTML内容转换为Bitmap</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HtmlToBitmapHelper</span></span>
 <span class="hljs-class"></span>&#123;
 	<span class="hljs-comment">/// &lt;summary&gt;</span>
@@ -481,6 +479,24 @@
   </script>
 
 
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "转换HTML内容为Bitmap&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
 
 
 
