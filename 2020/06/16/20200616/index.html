@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      397 字
+      384 字
     </span>
   
 
@@ -204,107 +204,110 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>利用COM组件将HTML内容转换为Bitmap</p>
-<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HtmlToBitmapHelper</span></span>
-<span class="hljs-class"></span>&#123;
-	<span class="hljs-comment">/// &lt;summary&gt;</span>
-    <span class="hljs-comment">/// </span>
-    <span class="hljs-comment">/// &lt;/summary&gt;</span>
-    <span class="hljs-comment">/// &lt;param name="htmPath"&gt;html链接&lt;/param&gt;</span>
-    <span class="hljs-comment">/// &lt;returns&gt;&lt;/returns&gt;</span>
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Bitmap <span class="hljs-title">ConverHTML</span><span class="hljs-params">(string htmPath)</span></span>
-<span class="hljs-function">    </span>&#123;
-        string ImagePath = string.Empty;
-        WebBrowser web = <span class="hljs-keyword">new</span> WebBrowser();
-        web.Navigate(htmPath);
-        <span class="hljs-keyword">while</span> (web.ReadyState != WebBrowserReadyState.Complete)
-        &#123;
-            Application.DoEvents();
-        &#125;
-        <span class="hljs-comment">//矩形容器宽高</span>
-        Rectangle screen = Screen.PrimaryScreen.Bounds;
-        screen.Width = (<span class="hljs-keyword">int</span>)(screen.Width * <span class="hljs-number">0.55</span>);  <span class="hljs-comment">//自定义55%宽</span>
-        screen.Height = (<span class="hljs-keyword">int</span>)(screen.Height * <span class="hljs-number">0.3</span>); <span class="hljs-comment">//30%高</span>
-        Size? imgsize = <span class="hljs-keyword">null</span>;
-        <span class="hljs-comment">//设置宽高</span>
-        web.Width = screen.Width;
-        web.Height = screen.Height;
-        web.ScriptErrorsSuppressed = <span class="hljs-keyword">true</span>;
-        web.ScrollBarsEnabled = <span class="hljs-keyword">false</span>;
-        Rectangle body = web.Document.Body.ScrollRectangle;
+              <h2 id="利用COM组件将HTML内容转换为Bitmap"><a href="#利用COM组件将HTML内容转换为Bitmap" class="headerlink" title="利用COM组件将HTML内容转换为Bitmap"></a>利用COM组件将HTML内容转换为Bitmap</h2><h3 id="画图"><a href="#画图" class="headerlink" title="画图"></a>画图</h3><p>其中html内容为一个公网链接或者本地虚拟路径</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Bitmap <span class="hljs-title">ConverHTML</span><span class="hljs-params">(string htmPath)</span></span>
+<span class="hljs-function"></span>&#123;
+    string ImagePath = string.Empty;
+    WebBrowser web = <span class="hljs-keyword">new</span> WebBrowser();
+    web.Navigate(htmPath);
+    <span class="hljs-keyword">while</span> (web.ReadyState != WebBrowserReadyState.Complete)
+    &#123;
+        Application.DoEvents();
+    &#125;
+    <span class="hljs-comment">//矩形容器宽高</span>
+    Rectangle screen = Screen.PrimaryScreen.Bounds;
+    screen.Width = (<span class="hljs-keyword">int</span>)(screen.Width * <span class="hljs-number">0.55</span>);  <span class="hljs-comment">//自定义55%宽</span>
+    screen.Height = (<span class="hljs-keyword">int</span>)(screen.Height * <span class="hljs-number">0.3</span>); <span class="hljs-comment">//30%高</span>
+    Size? imgsize = <span class="hljs-keyword">null</span>;
+    <span class="hljs-comment">//设置宽高</span>
+    web.Width = screen.Width;
+    web.Height = screen.Height;
+    web.ScriptErrorsSuppressed = <span class="hljs-keyword">true</span>;
+    web.ScrollBarsEnabled = <span class="hljs-keyword">false</span>;
+    Rectangle body = web.Document.Body.ScrollRectangle;
 
-        Rectangle docRectangle = <span class="hljs-keyword">new</span> Rectangle()
+    Rectangle docRectangle = <span class="hljs-keyword">new</span> Rectangle()
+    &#123;
+        Location = <span class="hljs-keyword">new</span> Point(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>),
+        Size = <span class="hljs-keyword">new</span> Size(body.Width &gt; screen.Width ? body.Width : screen.Width,
+         body.Height &gt; screen.Height ? body.Height : screen.Height)
+    &#125;;
+    Rectangle imgRectangle;
+    <span class="hljs-keyword">if</span> (imgsize == <span class="hljs-keyword">null</span>)
+        imgRectangle = docRectangle;
+    <span class="hljs-keyword">else</span>
+        imgRectangle = <span class="hljs-keyword">new</span> Rectangle()
         &#123;
             Location = <span class="hljs-keyword">new</span> Point(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>),
-            Size = <span class="hljs-keyword">new</span> Size(body.Width &gt; screen.Width ? body.Width : screen.Width,
-             body.Height &gt; screen.Height ? body.Height : screen.Height)
+            Size = imgsize.Value
         &#125;;
-        Rectangle imgRectangle;
-        <span class="hljs-keyword">if</span> (imgsize == <span class="hljs-keyword">null</span>)
-            imgRectangle = docRectangle;
-        <span class="hljs-keyword">else</span>
-            imgRectangle = <span class="hljs-keyword">new</span> Rectangle()
-            &#123;
-                Location = <span class="hljs-keyword">new</span> Point(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>),
-                Size = imgsize.Value
-            &#125;;
-        Bitmap bitmap = <span class="hljs-keyword">new</span> Bitmap(web.Width, web.Height);
-        IViewObject ivo = web.Document.DomDocument as IViewObject;
+    Bitmap bitmap = <span class="hljs-keyword">new</span> Bitmap(web.Width, web.Height);
+    IViewObject ivo = web.Document.DomDocument as IViewObject;
 
-        using (Graphics g = Graphics.FromImage(bitmap))
-        &#123;
-            IntPtr hdc = g.GetHdc();
-            ivo.Draw(<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, IntPtr.Zero, IntPtr.Zero,
-                     IntPtr.Zero, hdc, ref imgRectangle,
-                     ref docRectangle, IntPtr.Zero, <span class="hljs-number">0</span>);
-            g.ReleaseHdc(hdc);
-        &#125;
-        <span class="hljs-keyword">return</span> bitmap;
+    using (Graphics g = Graphics.FromImage(bitmap))
+    &#123;
+        IntPtr hdc = g.GetHdc();
+        ivo.Draw(<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, IntPtr.Zero, IntPtr.Zero,
+                 IntPtr.Zero, hdc, ref imgRectangle,
+                 ref docRectangle, IntPtr.Zero, <span class="hljs-number">0</span>);
+        g.ReleaseHdc(hdc);
     &#125;
-	
-	<span class="hljs-comment">/// &lt;summary&gt;</span>
-	<span class="hljs-comment">/// com对象用来实例化操作系统窗体</span>
-	<span class="hljs-comment">/// &lt;/summary&gt;</span>
-	[ComVisible(<span class="hljs-keyword">true</span>), ComImport()]
-	[GuidAttribute(<span class="hljs-string">"0000010d-0000-0000-C000-000000000046"</span>)]
-	[InterfaceTypeAttribute(ComInterfaceType.InterfaceIsIUnknown)]
-	<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">IViewObject</span></span>
-<span class="hljs-class">	</span>&#123;
-		[<span class="hljs-keyword">return</span>: MarshalAs(UnmanagedType.I4)]
-		[PreserveSig]
-		<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Draw</span><span class="hljs-params">(</span></span>
-<span class="hljs-function"><span class="hljs-params">			[MarshalAs(UnmanagedType.U4)</span>] UInt32 dwDrawAspect,</span>
-<span class="hljs-function">			<span class="hljs-keyword">int</span> lindex,</span>
-<span class="hljs-function">			IntPtr pvAspect,</span>
-<span class="hljs-function">			[In] IntPtr ptd,</span>
-<span class="hljs-function">			IntPtr hdcTargetDev,</span>
-<span class="hljs-function">			IntPtr hdcDraw,</span>
-<span class="hljs-function">			[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Struct)</span>] ref Rectangle lprcBounds,</span>
-<span class="hljs-function">			[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Struct)</span>] ref Rectangle lprcWBounds,</span>
-<span class="hljs-function">			IntPtr pfnContinue,</span>
-<span class="hljs-function">			[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.U4)</span>] UInt32 dwContinue)</span>;
-		[PreserveSig]
-		<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">GetColorSet</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwDrawAspect,</span>
-<span class="hljs-function">		   <span class="hljs-keyword">int</span> lindex, IntPtr pvAspect, [In] IntPtr ptd,</span>
-<span class="hljs-function">			IntPtr hicTargetDev, [Out] IntPtr ppColorSet)</span>;
-		[PreserveSig]
-		<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Freeze</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwDrawAspect,</span>
-<span class="hljs-function">						<span class="hljs-keyword">int</span> lindex, IntPtr pvAspect, [Out] IntPtr pdwFreeze)</span>;
-		[PreserveSig]
-		<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Unfreeze</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwFreeze)</span>;
-		<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">SetAdvise</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> aspects,</span>
-<span class="hljs-function">		  [In, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> advf,</span>
-<span class="hljs-function">		  [In, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Interface)</span>] IAdviseSink pAdvSink)</span>;
-		<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">GetAdvise</span><span class="hljs-params">([In, Out, MarshalAs(UnmanagedType.LPArray)</span>] <span class="hljs-keyword">int</span>[] paspects,</span>
-<span class="hljs-function">		  [In, Out, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.LPArray)</span>] <span class="hljs-keyword">int</span>[] advf,</span>
-<span class="hljs-function">		  [In, Out, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.LPArray)</span>] IAdviseSink[] pAdvSink)</span>;
-	&#125;
+    <span class="hljs-keyword">return</span> bitmap;
+&#125;</code></pre></div>
+
+<h3 id="com组件用来实例化操作系统窗体"><a href="#com组件用来实例化操作系统窗体" class="headerlink" title="com组件用来实例化操作系统窗体"></a>com组件用来实例化操作系统窗体</h3><div class="hljs"><pre><code class="hljs java">[ComVisible(<span class="hljs-keyword">true</span>), ComImport()]
+[GuidAttribute(<span class="hljs-string">"0000010d-0000-0000-C000-000000000046"</span>)]
+[InterfaceTypeAttribute(ComInterfaceType.InterfaceIsIUnknown)]
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">IViewObject</span></span>
+<span class="hljs-class"></span>&#123;
+	[<span class="hljs-keyword">return</span>: MarshalAs(UnmanagedType.I4)]
+	[PreserveSig]
+	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Draw</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">		[MarshalAs(UnmanagedType.U4)</span>] UInt32 dwDrawAspect,</span>
+<span class="hljs-function">		<span class="hljs-keyword">int</span> lindex,</span>
+<span class="hljs-function">		IntPtr pvAspect,</span>
+<span class="hljs-function">		[In] IntPtr ptd,</span>
+<span class="hljs-function">		IntPtr hdcTargetDev,</span>
+<span class="hljs-function">		IntPtr hdcDraw,</span>
+<span class="hljs-function">		[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Struct)</span>] ref Rectangle lprcBounds,</span>
+<span class="hljs-function">		[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Struct)</span>] ref Rectangle lprcWBounds,</span>
+<span class="hljs-function">		IntPtr pfnContinue,</span>
+<span class="hljs-function">		[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.U4)</span>] UInt32 dwContinue)</span>;
+	[PreserveSig]
+	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">GetColorSet</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwDrawAspect,</span>
+<span class="hljs-function">	   <span class="hljs-keyword">int</span> lindex, IntPtr pvAspect, [In] IntPtr ptd,</span>
+<span class="hljs-function">		IntPtr hicTargetDev, [Out] IntPtr ppColorSet)</span>;
+	[PreserveSig]
+	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Freeze</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwDrawAspect,</span>
+<span class="hljs-function">					<span class="hljs-keyword">int</span> lindex, IntPtr pvAspect, [Out] IntPtr pdwFreeze)</span>;
+	[PreserveSig]
+	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Unfreeze</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwFreeze)</span>;
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">SetAdvise</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> aspects,</span>
+<span class="hljs-function">	  [In, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> advf,</span>
+<span class="hljs-function">	  [In, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Interface)</span>] IAdviseSink pAdvSink)</span>;
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">GetAdvise</span><span class="hljs-params">([In, Out, MarshalAs(UnmanagedType.LPArray)</span>] <span class="hljs-keyword">int</span>[] paspects,</span>
+<span class="hljs-function">	  [In, Out, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.LPArray)</span>] <span class="hljs-keyword">int</span>[] advf,</span>
+<span class="hljs-function">	  [In, Out, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.LPArray)</span>] IAdviseSink[] pAdvSink)</span>;
 &#125;</code></pre></div>
             </article>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/C/">C#</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/COM/">COM</a>
+                    
+                  </div>
                 
               </div>
               
@@ -314,6 +317,12 @@
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/07/03/20200703/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2020年7月3日21点36分</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">
