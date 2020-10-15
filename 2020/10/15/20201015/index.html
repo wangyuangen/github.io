@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      315 字
+      588 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      9
        分钟
     </span>
   
@@ -225,7 +225,8 @@ b:6</code></pre></div>
 <h5 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/reference-types" target="_blank" rel="noopener">引用类型</a></h5><h5 id="引用类型的拷贝只是复制源拷贝对象的引用地址给被拷贝对象，两者的引用地址都指向托管堆上的同一处对象实例，因此在修改被拷贝对象后源拷贝对象也会被修改"><a href="#引用类型的拷贝只是复制源拷贝对象的引用地址给被拷贝对象，两者的引用地址都指向托管堆上的同一处对象实例，因此在修改被拷贝对象后源拷贝对象也会被修改" class="headerlink" title="引用类型的拷贝只是复制源拷贝对象的引用地址给被拷贝对象，两者的引用地址都指向托管堆上的同一处对象实例，因此在修改被拷贝对象后源拷贝对象也会被修改"></a>引用类型的拷贝只是复制源拷贝对象的引用地址给被拷贝对象，两者的引用地址都指向托管堆上的同一处对象实例，因此在修改被拷贝对象后源拷贝对象也会被修改</h5><div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span><span class="hljs-params">(string[] args)</span></span>
 <span class="hljs-function"></span>&#123;
     Student A = <span class="hljs-keyword">new</span> Student(<span class="hljs-string">"张三"</span>, <span class="hljs-string">"男"</span>);
-    Student B = A;
+    Student B = <span class="hljs-keyword">new</span> Student();
+    B = A;
     Console.WriteLine($<span class="hljs-string">"A:&#123;A.ToString()&#125;"</span>);
     Console.WriteLine($<span class="hljs-string">"B:&#123;B.ToString()&#125;"</span>);
     B.Name = <span class="hljs-string">"李四"</span>;
@@ -237,6 +238,7 @@ b:6</code></pre></div>
 
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span></span>
 <span class="hljs-class"></span>&#123;
+	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Student</span><span class="hljs-params">()</span> </span>&#123; &#125;
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Student</span><span class="hljs-params">(string name,string gender)</span></span>
 <span class="hljs-function">    </span>&#123;
         <span class="hljs-keyword">this</span>.Name = name;
@@ -268,6 +270,57 @@ B:Name:张三,Gender:男
 A:Name:李四,Gender:女
 B:Name:李四,Gender:女</code></pre></div>
 
+<h3 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h3><h5 id="复制对象的每个成员实现深拷贝-仍以Student为例"><a href="#复制对象的每个成员实现深拷贝-仍以Student为例" class="headerlink" title="复制对象的每个成员实现深拷贝(仍以Student为例)"></a>复制对象的每个成员实现深拷贝(仍以Student为例)</h5><div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span><span class="hljs-params">(string[] args)</span></span>
+<span class="hljs-function"></span>&#123;
+    Student A = <span class="hljs-keyword">new</span> Student(<span class="hljs-string">"张三"</span>, <span class="hljs-string">"男"</span>);
+    <span class="hljs-comment">//Student B = new Student();</span>
+    <span class="hljs-comment">//B.Name = A.Name;</span>
+    <span class="hljs-comment">//B.Gender = A.Gender;</span>
+    <span class="hljs-comment">//Console.WriteLine($"A:&#123;A.ToString()&#125;");</span>
+    <span class="hljs-comment">//Console.WriteLine($"B:&#123;B.ToString()&#125;");</span>
+    <span class="hljs-comment">//B.Name = "李四";</span>
+    <span class="hljs-comment">//B.Gender = "女";</span>
+    <span class="hljs-comment">//Console.WriteLine($"A:&#123;A.ToString()&#125;");</span>
+    <span class="hljs-comment">//Console.WriteLine($"B:&#123;B.ToString()&#125;");</span>
+
+    Student B = DeepCopyByReflection&lt;Student&gt;(A);
+    Console.WriteLine($<span class="hljs-string">"A:&#123;A.ToString()&#125;"</span>);
+    Console.WriteLine($<span class="hljs-string">"B:&#123;B.ToString()&#125;"</span>);
+    B.Name = <span class="hljs-string">"李四"</span>;
+    B.Gender = <span class="hljs-string">"女"</span>;
+    Console.WriteLine($<span class="hljs-string">"A:&#123;A.ToString()&#125;"</span>);
+    Console.WriteLine($<span class="hljs-string">"B:&#123;B.ToString()&#125;"</span>);
+&#125;
+
+<span class="hljs-comment">/// &lt;summary&gt;</span>
+<span class="hljs-comment">/// 复制对象每个成员实现深拷贝</span>
+<span class="hljs-comment">/// &lt;/summary&gt;</span>
+<span class="hljs-comment">/// &lt;typeparam name="T"&gt;&lt;/typeparam&gt;</span>
+<span class="hljs-comment">/// &lt;param name="obj"&gt;&lt;/param&gt;</span>
+<span class="hljs-comment">/// &lt;returns&gt;&lt;/returns&gt;</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> T DeepCopyByReflection&lt;T&gt;(T obj)
+&#123;
+    <span class="hljs-keyword">if</span> (obj is string || obj.GetType().IsValueType)
+        <span class="hljs-keyword">return</span> obj;
+    
+    object retval = Activator.CreateInstance(obj.GetType());<span class="hljs-comment">//创建对象实例</span>
+    FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+    foreach (<span class="hljs-keyword">var</span> field in fields)
+    &#123;
+        <span class="hljs-keyword">try</span>
+        &#123;
+            <span class="hljs-comment">//复制字段值</span>
+            field.SetValue(retval, DeepCopyByReflection(field.GetValue(obj)));
+        &#125;
+        <span class="hljs-keyword">catch</span> &#123; &#125;
+    &#125;
+    <span class="hljs-keyword">return</span> (T)retval;
+&#125;</code></pre></div>
+<p>输出:</p>
+<div class="hljs"><pre><code class="hljs bash">A:Name:张三,Gender:男
+B:Name:张三,Gender:男
+A:Name:张三,Gender:男
+B:Name:李四,Gender:女</code></pre></div>
             </article>
             <hr>
             <div>
