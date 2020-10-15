@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      577 字
+      582 字
     </span>
   
 
@@ -205,21 +205,21 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年9月11日 上午
+                  本文最后更新于：2020年10月15日 下午
                 
               </p>
             
             <article class="markdown-body">
-              <p>此脚本支持在服务端一键安装基于Nginx+websocket+tls的v2ray流量伪装和bbr加速模块.</p>
+              <p>此脚本支持在服务端安装基于Nginx+websocket+tls的v2ray流量伪装和bbr加速模块.</p>
 <h3 id="注意：这是自行搭建科学上网环境的必要条件："><a href="#注意：这是自行搭建科学上网环境的必要条件：" class="headerlink" title="注意：这是自行搭建科学上网环境的必要条件："></a>注意：这是自行搭建科学上网环境的必要条件：</h3><ol>
 <li>购买服务器和域名.</li>
-<li>使用putty等工具连接到服务器.</li>
+<li>使用putty等SSH工具连接到服务器.</li>
 <li>服务器防火墙将443、80端口放行.</li>
 </ol>
 <p>伪装的前提是需要一个域名（例如test.com），并且域名的某个主机名（例如aaa.test.com）正确解析到服务器的ip</p>
 <h3 id="使用教程"><a href="#使用教程" class="headerlink" title="使用教程"></a>使用教程</h3><p>登录到服务器在终端输入如下命令：</p>
 <div class="hljs"><pre><code class="hljs bash">bash &lt;(curl -sL https://raw.githubusercontent.com/hijkpw/scripts/master/centos_install_v2ray2.sh)</code></pre></div>
-<p>按回车键开始一键安装，直到屏幕出现“确认满足按y，按其他退出脚本：”，确认条件满足，按y，回车，然后输入你域名的主机名（注意是主机名，比如aaa.test.com，不建议填裸域名test.com），设置一个伪装路径（不能是/），例如/test（强烈建议设置一个复杂的、别人猜不到的路径，除 “数字、字母、/、-、_” 外不能有其他特殊字符）</p>
+<p>回车开始安装，直到屏幕出现“确认满足按y，按其他退出脚本：”，确认条件满足，按y，回车，然后输入你域名的主机名（注意是主机名，比如aaa.test.com，不建议填裸域名test.com），设置一个伪装路径（不能是/），例如/test（强烈建议设置一个复杂的、别人猜不到的路径，除 “数字、字母、/、-、_” 外不能有其他特殊字符）</p>
 <h3 id="如何判断服务端已经正常运行"><a href="#如何判断服务端已经正常运行" class="headerlink" title="如何判断服务端已经正常运行"></a>如何判断服务端已经正常运行</h3><ol>
 <li>脚本执行完毕后终端界面上显示以下内容</li>
 </ol>
@@ -255,7 +255,7 @@ systemctl start nginx 	<span class="hljs-comment">#启动</span>
 systemctl stop nginx		<span class="hljs-comment">#停止</span>
 systemctl restart nginx		<span class="hljs-comment">#重启</span></code></pre></div></li>
 <li>更新v2ray到最新版：<div class="hljs"><pre><code class="hljs bash">bash &lt;(curl -L -s https://install.direct/go.sh)</code></pre></div></li>
-<li>查看SSL证书:<div class="hljs"><pre><code class="hljs bash">certbot certificates <span class="hljs-comment">#查看SSL证书</span>
+<li>查看SSL证书(证书有期限,到期需要更新):<div class="hljs"><pre><code class="hljs bash">certbot certificates <span class="hljs-comment">#查看SSL证书</span>
 
 <span class="hljs-comment">#更新证书</span>
 systemctl stop nginx;
