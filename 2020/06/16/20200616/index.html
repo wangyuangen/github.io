@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      384 字
+      295 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      5
        分钟
     </span>
   
@@ -205,7 +205,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2020年7月4日 下午
+                  本文最后更新于：2020年10月15日 上午
                 
               </p>
             
@@ -267,33 +267,18 @@
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">IViewObject</span></span>
 <span class="hljs-class"></span>&#123;
 	[<span class="hljs-keyword">return</span>: MarshalAs(UnmanagedType.I4)]
-	[PreserveSig]
-	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Draw</span><span class="hljs-params">(</span></span>
-<span class="hljs-function"><span class="hljs-params">		[MarshalAs(UnmanagedType.U4)</span>] UInt32 dwDrawAspect,</span>
-<span class="hljs-function">		<span class="hljs-keyword">int</span> lindex,</span>
-<span class="hljs-function">		IntPtr pvAspect,</span>
-<span class="hljs-function">		[In] IntPtr ptd,</span>
-<span class="hljs-function">		IntPtr hdcTargetDev,</span>
-<span class="hljs-function">		IntPtr hdcDraw,</span>
-<span class="hljs-function">		[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Struct)</span>] ref Rectangle lprcBounds,</span>
-<span class="hljs-function">		[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Struct)</span>] ref Rectangle lprcWBounds,</span>
-<span class="hljs-function">		IntPtr pfnContinue,</span>
-<span class="hljs-function">		[<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.U4)</span>] UInt32 dwContinue)</span>;
-	[PreserveSig]
-	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">GetColorSet</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwDrawAspect,</span>
-<span class="hljs-function">	   <span class="hljs-keyword">int</span> lindex, IntPtr pvAspect, [In] IntPtr ptd,</span>
-<span class="hljs-function">		IntPtr hicTargetDev, [Out] IntPtr ppColorSet)</span>;
-	[PreserveSig]
-	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Freeze</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwDrawAspect,</span>
-<span class="hljs-function">					<span class="hljs-keyword">int</span> lindex, IntPtr pvAspect, [Out] IntPtr pdwFreeze)</span>;
-	[PreserveSig]
-	<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Unfreeze</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> dwFreeze)</span>;
-	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">SetAdvise</span><span class="hljs-params">([In, MarshalAs(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> aspects,</span>
-<span class="hljs-function">	  [In, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.U4)</span>] <span class="hljs-keyword">int</span> advf,</span>
-<span class="hljs-function">	  [In, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Interface)</span>] IAdviseSink pAdvSink)</span>;
-	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">GetAdvise</span><span class="hljs-params">([In, Out, MarshalAs(UnmanagedType.LPArray)</span>] <span class="hljs-keyword">int</span>[] paspects,</span>
-<span class="hljs-function">	  [In, Out, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.LPArray)</span>] <span class="hljs-keyword">int</span>[] advf,</span>
-<span class="hljs-function">	  [In, Out, <span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.LPArray)</span>] IAdviseSink[] pAdvSink)</span>;
+        [PreserveSig]
+        <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Draw</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            [MarshalAs(UnmanagedType.U4)</span>] UInt32 dwDrawAspect,</span>
+<span class="hljs-function">            <span class="hljs-keyword">int</span> lindex,</span>
+<span class="hljs-function">            IntPtr pvAspect,</span>
+<span class="hljs-function">            [In] IntPtr ptd,</span>
+<span class="hljs-function">            IntPtr hdcTargetDev,</span>
+<span class="hljs-function">            IntPtr hdcDraw,</span>
+<span class="hljs-function">            [<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Struct)</span>] ref Rectangle lprcBounds,</span>
+<span class="hljs-function">            [<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.Struct)</span>] ref Rectangle lprcWBounds,</span>
+<span class="hljs-function">            IntPtr pfnContinue,</span>
+<span class="hljs-function">            [<span class="hljs-title">MarshalAs</span><span class="hljs-params">(UnmanagedType.U4)</span>] UInt32 dwContinue)</span>;
 &#125;</code></pre></div>
             </article>
             <hr>
