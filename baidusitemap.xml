@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>wangyuangen.github.io/2020/07/03/20200703/</loc>
+    <lastmod>2020-10-22</lastmod>
+  </url>
+  <url>
     <loc>wangyuangen.github.io/2020/10/15/20201015/</loc>
     <lastmod>2020-10-15</lastmod>
   </url>
@@ -11,10 +15,6 @@
   <url>
     <loc>wangyuangen.github.io/2020/06/16/20200616/</loc>
     <lastmod>2020-10-15</lastmod>
-  </url>
-  <url>
-    <loc>wangyuangen.github.io/2020/07/03/20200703/</loc>
-    <lastmod>2020-08-17</lastmod>
   </url>
   <url>
     <loc>wangyuangen.github.io/2020/06/06/hello-world/</loc>
