@@ -4,6 +4,77 @@
   
   
   <entry>
+    <title>HTTP与Socket以及WebSocket的关系与区别</title>
+    <link href="/2021/03/15/20210315/"/>
+    <url>/2021/03/15/20210315/</url>
+    
+    <content type="html"><![CDATA[<h3 id="WebSocket和Socket区别"><a href="#WebSocket和Socket区别" class="headerlink" title="WebSocket和Socket区别"></a>WebSocket和Socket区别</h3><p>可以理解WebSocket为HTTP(应用层)，而Socket是将TCP/IP传输层协议封装后供调用的接口。</p><p>HTTP协议有一个缺陷：通信只能由客户端发起，做不到服务器主动向客户端推送消息。</p><p>WebSocket协议的最大特点是服务器可主动向客户端推送消息，客户端也可以主动向服务器发送信息，是真正的双向平等<br>对话，属于服务器推送技术的一种</p><h3 id="Socket和HTTP的区别"><a href="#Socket和HTTP的区别" class="headerlink" title="Socket和HTTP的区别"></a>Socket和HTTP的区别</h3><p>HTTP协议：简单的对象访问协议，对应于应用层。HTTP协议是基于TCP链接的。</p><p>TCP协议：对应于传输层。</p><p>IP协议：对应于网络层。</p><p>TCP/IP是传输层协议，主要解决数据如何在网络中传输，而HTTP是应用层协议，主要解决如何包装数据。</p><p>Socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口(API)，通过Socket才能使用TCP/IP协议。</p><p>HTTP连接：HTTP连接为短链接，及客户端向服务器发送一次请求，服务端响应后连接即会断开。</p><p>Socket连接：Socket连接为长连接，理论上客户端和服务端一旦建立连接，则不会主动断掉;但是由于各种环境因素可能会是连接断开，比如服务器端或客户端主机宕机、网络故障，或者两者间长时间没有数据传输，网络防火墙可能会断开该连接已释放网络资源。所以当一个Socket连接中没有数据的传输，那么为了位置连续的连接需要发送心跳消息，具体心跳消息格式由开发者自己定义。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>HTTP</category>
+      
+      <category>Socket</category>
+      
+      <category>TCP</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Socket</tag>
+      
+      <tag>HTTP</tag>
+      
+      <tag>WebSocket</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="/2021/03/15/hello-world/"/>
+    <url>/2021/03/15/hello-world/</url>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="hljs"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">"My New Post"</span></code></pre></div><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="hljs"><pre><code class="hljs bash">$ hexo server</code></pre></div><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="hljs"><pre><code class="hljs bash">$ hexo generate</code></pre></div><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="hljs"><pre><code class="hljs bash">$ hexo deploy</code></pre></div><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Socket通信功能实现</title>
+    <link href="/2021/03/14/20210314/"/>
+    <url>/2021/03/14/20210314/</url>
+    
+    <content type="html"><![CDATA[<h3 id="Socket概述"><a href="#Socket概述" class="headerlink" title="Socket概述"></a>Socket概述</h3><p>什么是Socket？</p><p>Socket的中文翻译过来就是“套接字”。套接字是什么，我们先来看看它的英文含义：插座。</p><p>Socket就像一个电话插座，负责连通两端的电话，进行点对点通信，让电话可以进行通信，端口就像插座上的孔，端口不能同时被其他进程占用。而我们建立连接就像把插头插在这个插座上，创建一个Socket实例开始监听后，这个电话插座就时刻监听着消息的传入，谁拨通我这个“IP地址和端口”，我就接通谁。</p><p>实际上，Socket是在应用层和传输层之间的一个抽象层，它把TCP/IP层复杂的操作抽象为几个简单的接口，供应用层调用实现进程在网络中的通信。Socket起源于UNIX，在Unix一切皆文件的思想下，进程间通信就被冠名为文件描述符（file desciptor），Socket是一种“打开—读/写—关闭”模式的实现，服务器和客户端各自维护一个“文件”，在建立连接打开后，可以向文件写入内容供对方读取或者读取对方内容，通讯结束时关闭文件</p><h3 id="服务端代码实现"><a href="#服务端代码实现" class="headerlink" title="服务端代码实现"></a>服务端代码实现</h3><p>服务端实现思路主要分创建监听对象等待客户端传入的连接,客户端连接成功后创建负责通信的socket,由负责通信的socket接受客户端发送的数据以及向客户端发送数据。</p><h4 id="创建监听"><a href="#创建监听" class="headerlink" title="创建监听"></a>创建监听</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Socket socketListen;<span class="hljs-comment">//监听对象</span><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> List&lt;Socket&gt; socketSends = <span class="hljs-keyword">new</span> List&lt;Socket&gt;();<span class="hljs-comment">//存储客户端连接</span><span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 消息提醒</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-comment">/// &lt;param name="msg"&gt;&lt;/param&gt;</span><span class="hljs-comment">/// &lt;param name="endpoint"&gt;&lt;/param&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">showMsg</span><span class="hljs-params">(string msg, EndPoint endpoint = <span class="hljs-keyword">null</span>)</span></span><span class="hljs-function"></span>&#123;    <span class="hljs-keyword">if</span> (endpoint != <span class="hljs-keyword">null</span>)        msg = string.Format(<span class="hljs-string">"&#123;0&#125;：&#123;1&#125;"</span>, endpoint.ToString(), msg);    <span class="hljs-comment">//输出msg</span>&#125;<span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 监听</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-comment">/// &lt;param name="ipStr"&gt;&lt;/param&gt;</span><span class="hljs-comment">/// &lt;param name="portStr"&gt;&lt;/param&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Listen</span><span class="hljs-params">(string ipStr,string portStr)</span></span><span class="hljs-function"></span>&#123;    <span class="hljs-comment">//创建监听对象</span>    socketListen = <span class="hljs-keyword">new</span> Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);    IPAddress ip;    IPAddress.TryParse(ipStr, out ip);    IPEndPoint endPoint = <span class="hljs-keyword">new</span> IPEndPoint(ip, Convert.ToInt32(portStr));    <span class="hljs-comment">//监听</span>    socketListen.Bind(endPoint);    showMsg(<span class="hljs-string">"监听成功"</span>);    socketListen.Listen(<span class="hljs-number">10</span>);    AcceptAsync();&#125;</code></pre></div><h4 id="接受客户端连接"><a href="#接受客户端连接" class="headerlink" title="接受客户端连接"></a>接受客户端连接</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 接受客户端连接</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">AcceptAsync</span><span class="hljs-params">()</span></span><span class="hljs-function"></span>&#123;    Socket socketConnect = <span class="hljs-keyword">null</span>;    socketListen.BeginAccept(async =&gt;    &#123;        socketConnect = socketListen.EndAccept(async);        string remoteEndPoint = socketConnect.RemoteEndPoint.ToString();        <span class="hljs-keyword">if</span> (!socketSends.Any(x =&gt; x.RemoteEndPoint.ToString() == remoteEndPoint))            socketSends.Add(socketConnect);        showMsg(<span class="hljs-string">"连接成功"</span>,socketConnect.RemoteEndPoint);        ReceiveAsync(socketConnect);    <span class="hljs-comment">//接受客户端数据</span>        AcceptAsync();  <span class="hljs-comment">//回调以持续接受客户端连接</span>    &#125;, <span class="hljs-keyword">null</span>);&#125;</code></pre></div><h4 id="接受客户端发送的数据"><a href="#接受客户端发送的数据" class="headerlink" title="接受客户端发送的数据"></a>接受客户端发送的数据</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 接受客户端数据</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-comment">/// &lt;param name="socket"&gt;&lt;/param&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ReceiveAsync</span><span class="hljs-params">(Socket socket)</span></span><span class="hljs-function"></span>&#123;    <span class="hljs-keyword">byte</span>[] data = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">1024</span>];    socket.BeginReceive(data, <span class="hljs-number">0</span>, data.Length, SocketFlags.None, async =&gt;    &#123;        <span class="hljs-keyword">try</span>        &#123;            <span class="hljs-keyword">int</span> lenght = socket.EndReceive(async);            string result = Encoding.UTF8.GetString(data, <span class="hljs-number">0</span>, lenght);            showMsg(result,socket.RemoteEndPoint);            ReceiveAsync(socket);        &#125;        <span class="hljs-keyword">catch</span> (SocketException ex)        &#123;            showMsg(ex.Message);        &#125;    &#125;, <span class="hljs-keyword">null</span>);&#125;</code></pre></div><h4 id="向客户端发送数据"><a href="#向客户端发送数据" class="headerlink" title="向客户端发送数据"></a>向客户端发送数据</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 向客户端发送数据</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-comment">/// &lt;param name="remoteEndPoint"&gt;&lt;/param&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Send</span><span class="hljs-params">(string msg,string remoteEndPoint)</span></span><span class="hljs-function"></span>&#123;    <span class="hljs-keyword">byte</span>[] buffer = Encoding.UTF8.GetBytes(msg);    Socket sendSocket = socketSends.FirstOrDefault(x =&gt; x.RemoteEndPoint.ToString() == remoteEndPoint);     <span class="hljs-keyword">if</span> (sendSocket != <span class="hljs-keyword">null</span>)    &#123;        sendSocket.BeginSend(buffer, <span class="hljs-number">0</span>, buffer.Length, SocketFlags.None, async =&gt;        &#123;            sendSocket.EndSend(async);            showMsg(msg, sendSocket.LocalEndPoint);        &#125;, <span class="hljs-keyword">null</span>);    &#125;&#125;</code></pre></div><h3 id="客户端代码实现"><a href="#客户端代码实现" class="headerlink" title="客户端代码实现"></a>客户端代码实现</h3><p>客户端负责向服务端发送连接请求,连接成功后与服务端之间收发数据的功能</p><h4 id="创建连接"><a href="#创建连接" class="headerlink" title="创建连接"></a>创建连接</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Socket socketClient;<span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 消息提醒</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-comment">/// &lt;param name="msg"&gt;&lt;/param&gt;</span><span class="hljs-comment">/// &lt;param name="endpoint"&gt;&lt;/param&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ShowMsg</span><span class="hljs-params">(string msg, EndPoint endpoint = <span class="hljs-keyword">null</span>)</span></span><span class="hljs-function"></span>&#123;    <span class="hljs-keyword">if</span> (endpoint != <span class="hljs-keyword">null</span>)        msg = string.Format(<span class="hljs-string">"&#123;0&#125;：&#123;1&#125;"</span>, endpoint.ToString(), msg);    <span class="hljs-comment">//输出msg</span>&#125;<span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 连接</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-comment">/// &lt;param name="ip"&gt;&lt;/param&gt;</span><span class="hljs-comment">/// &lt;param name="port"&gt;&lt;/param&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ConnectAsync</span><span class="hljs-params">(string ip,string port)</span></span><span class="hljs-function"></span>&#123;    socketClient = <span class="hljs-keyword">new</span> Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);    IPAddress address;    IPAddress.TryParse(ip, out address);    IPEndPoint endPoint = <span class="hljs-keyword">new</span> IPEndPoint(address, Convert.ToInt32(port));    socketClient.BeginConnect(endPoint, async =&gt;    &#123;        socketClient.EndConnect(async);        ShowMsg(<span class="hljs-string">"连接成功"</span>);        ReceiveAsync(socketClient);    &#125;, <span class="hljs-keyword">null</span>);&#125;</code></pre></div><h4 id="接受数据"><a href="#接受数据" class="headerlink" title="接受数据"></a>接受数据</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 接受数据</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-comment">/// &lt;param name="socketClient"&gt;&lt;/param&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ReceiveAsync</span><span class="hljs-params">(Socket socketClient)</span></span><span class="hljs-function"></span>&#123;    <span class="hljs-keyword">byte</span>[] data = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">1024</span>];    socketClient.BeginReceive(data, <span class="hljs-number">0</span>, data.Length, SocketFlags.None, async =&gt; &#123;        socketClient.EndReceive(async);        string msg = Encoding.UTF8.GetString(data);        ShowMsg(msg, socketClient.RemoteEndPoint);        ReceiveAsync(socketClient);    &#125;, <span class="hljs-keyword">null</span>);&#125;</code></pre></div><h4 id="发送数据"><a href="#发送数据" class="headerlink" title="发送数据"></a>发送数据</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/// &lt;summary&gt;</span><span class="hljs-comment">/// 发送数据</span><span class="hljs-comment">/// &lt;/summary&gt;</span><span class="hljs-comment">/// &lt;param name="msg"&gt;&lt;/param&gt;</span><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Send</span><span class="hljs-params">(string msg)</span></span><span class="hljs-function"></span>&#123;    <span class="hljs-keyword">byte</span>[] data = Encoding.UTF8.GetBytes(msg);    socketClient.BeginSend(data, <span class="hljs-number">0</span>, data.Length, SocketFlags.None, async =&gt;    &#123;        socketClient.EndSend(async);        ShowMsg(msg, socketClient.LocalEndPoint);    &#125;, <span class="hljs-keyword">null</span>);&#125;</code></pre></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>C#</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Socket</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>浅拷贝与深拷贝</title>
     <link href="/2020/10/15/20201015/"/>
     <url>/2020/10/15/20201015/</url>
@@ -90,19 +161,6 @@
       <tag>COM</tag>
       
     </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="/2020/06/06/hello-world/"/>
-    <url>/2020/06/06/hello-world/</url>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><div class="hljs"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">"My New Post"</span></code></pre></div><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><div class="hljs"><pre><code class="hljs bash">$ hexo server</code></pre></div><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><div class="hljs"><pre><code class="hljs bash">$ hexo generate</code></pre></div><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><div class="hljs"><pre><code class="hljs bash">$ hexo deploy</code></pre></div><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-    
-    
     
   </entry>
   
